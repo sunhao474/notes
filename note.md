@@ -5,6 +5,23 @@ https://www.jianshu.com/p/3433142faa68
 http://bigerfe.com/ 9527
 https://www.cnblogs.com/liuhao-web/p/11589848.html
 
+
+## 2022.2.10
+1. 零宽字符及其应用 https://github.com/zengkan0703/text-watermark/blob/master/src/index.js
+2. reg.exec的返回值含义（返回一个数组，第0项是完全匹配的字符串，后面是正则表达式内()里的内容） 例子：
+
+```javascript
+var re = /quick\s(brown).+?(Jumps)/ig;
+var result = re.exec('The Quick Brown Fox Jumps Over The Lazy Dog');
+
+console.log(result)
+结果是result: [
+    0: 'Quick Brown Fox Jumps',
+    1: 'brown', // 第一个括号内容
+    2: 'Jumps',// 第二个括号内容
+]
+```
+
 ## 2022.2.7
 1. 注意Array.concat的用法：arr = arr.concat(arr2)
 
