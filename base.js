@@ -64,3 +64,44 @@ function parseParams(url) {
 }
 
 parseParams()
+
+function deepclone(source) {
+    let res;
+    if (Array.isArray(source)) {
+        res = []
+        source.forEach(item => {
+            res.push(deepclone(item))
+        })
+    } else if (typeof source == 'object') {
+        res = {}
+
+        for (let attrs in source) {
+            res[attrs] = deepclone(source[attrs])
+        }
+    } else {
+        res = source
+    }
+
+    return res
+}
+
+// 实现json.stringfy
+function stringify(obj) {
+    if (typeof obj !=='object') {
+        throw new Error('no object')
+    }
+
+    let res;
+    function recursion(target) {
+
+    }
+
+    function addNbsp(str, num) {
+        const res = ''
+        for (let i = 0; i < num; i++) {
+            res += ' '
+        }
+
+        return res += str;
+    }
+}
