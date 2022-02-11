@@ -86,22 +86,55 @@ function deepclone(source) {
 }
 
 // 实现json.stringfy
-function stringify(obj) {
-    if (typeof obj !=='object') {
-        throw new Error('no object')
-    }
+function stringify(target) {
+    function recursion(target, level) {
+        let res = ''
 
-    let res;
-    function recursion(target) {
+        if (Array.isArray(target)) {
+            res += '[\n'
+            for (let i = 0; i < target.length;i++) {
+                res += addNbsp(level + 1) + recursion(target[i], level + 1)
+            }
+            res += addNbsp(level) + '],\n'
+        } else if (typeof target == 'object') {
+            res += '{\n'
 
-    }
+            for (let attr in target) {
+                res += addNbsp(level + 1) + attr + ':' + recursion(target[attr], level + 1)
+            }
 
-    function addNbsp(str, num) {
-        const res = ''
-        for (let i = 0; i < num; i++) {
-            res += ' '
+            res += addNbsp(level) + '},\n'
+        } else if (typeof target == 'string') {
+            res += "'" + target + "'" + ',\n'
+        } else {
+            res += target + ',\n'
         }
 
-        return res += str;
+        return res;
+    }
+
+    function addNbsp(num) {
+        let nbsps = ''
+        for (let i = 0; i < num * 4; i++) {
+            nbsps += ' '
+        }
+
+        return nbsps;
+    }
+
+    return recursion(target, 0)
+}
+
+let strtarget = {
+    a: 1,
+    b: 2,
+    c: [
+        1,2,3
+    ],
+    d: {
+        ee: 'asd',
+        ff: 'fff'
     }
 }
+
+console.log(stringify(strtarget))
