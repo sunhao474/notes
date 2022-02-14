@@ -1,10 +1,18 @@
 ## 置顶
-https://www.cnblogs.com/theblogs/p/10575845.html
-https://segmentfault.com/a/1190000015288700
-https://www.jianshu.com/p/3433142faa68
-http://bigerfe.com/ 9527
-https://www.cnblogs.com/liuhao-web/p/11589848.html
+https://www.cnblogs.com/theblogs/p/10575845.html  
+https://segmentfault.com/a/1190000015288700  
+https://www.jianshu.com/p/3433142faa68  
+http://bigerfe.com/ 9527  
+https://www.cnblogs.com/liuhao-web/p/11589848.html  
+刷题好网站：
+https://fe.ecool.fun/
 
+## 2022.2.14
+1. safari也使用webkit内核。firefox采用的是gecko内核
+2. search 忽略全局标志g
+3. math.pow()
+4. math.round(num)的规则：num的值（无论正负）先加0.5，然后数值的绝对值部分向下取整
+5. for in/Object.keys/getOwnPropertyNames三者的区别
 
 ## 2022.2.10
 1. 零宽字符及其应用 https://github.com/zengkan0703/text-watermark/blob/master/src/index.js
