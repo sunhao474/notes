@@ -102,7 +102,9 @@ function cloneDeep(target) {
     return res
 }
 ```
-这种类似的形式，递归函数要标明第二个参数，也就是将属性插入哪里。这样写就稍微麻烦一点，而且要在cloneDeep中和inner里面分别判断target的类型，不太优雅。
+这种类似的形式，递归函数要标明第二个参数，也就是将属性插入哪里。这样写就稍微麻烦一点，而且要在cloneDeep中和inner里面分别判断target的类型，不太优雅。  
+这个cloneDeep不是一个完备的方法。可以参考https://mp.weixin.qq.com/s?__biz=Mzk0NTI2NDgxNQ==&mid=2247483830&idx=1&sn=7b4f2ee6c59bfe6573f3d1a088f1e6f6&chksm=c3194076f46ec960c00be0853a1c6454219ed711c1ecda292ac23851a008f707fd56d1516206&token=1742237627&lang=zh_CN#rd  
+这个深拷贝解决了set、map的复制，以及利用weakMap防止循环引用的问题。
 
 ## 3. stringify
 同样非常经典。实现类似JSON.stringify的功能，把目标转化为纯字符串数组。我们这里来玩个花活，把空格和换行符也插入（实际上是不用插入的）  
