@@ -1,6 +1,6 @@
 # 目录
 
-1.[实现call](#1)
+1.[实现call](#1)  
 2.[实现bind](#2)
 
 ---
@@ -44,7 +44,7 @@ Function.prototype.mybind = function() {
         var currentArgs = Array.prototype.slice.call(arguments);
 
         target = NOP.isPrototypeOf(this) ? this : target
-        this.call(target, ...currentArgs, args);
+        this.call(target, ...currentArgs, ...args);
     }
 
     if (this.prototype) {
