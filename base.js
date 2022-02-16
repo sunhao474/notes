@@ -3,7 +3,7 @@ function judge(target) {
     if (target === null) return 'null'
 
     return typeof target == 'object' ?
-        Object.prototype.toString.call(target).split(' ') : typeof target
+        Object.prototype.toString.call(target).split(' ')[1].replace(']', '') : typeof target
 }
 // 将横线式命名（get-element-by-id）转化为驼峰命名getElementById
 function transformString(val) {

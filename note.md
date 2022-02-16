@@ -7,6 +7,9 @@ https://www.cnblogs.com/liuhao-web/p/11589848.html
 刷题好网站：
 https://fe.ecool.fun/
 
+## 2022.2.16
+1. null和undefined的区别
+
 ## 2022.2.14
 1. safari也使用webkit内核。firefox采用的是gecko内核
 2. search 忽略全局标志g
