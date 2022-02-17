@@ -30,6 +30,7 @@
 ---
 
 ## <a id="4">函数</a>
+[笔记](./04_function/04_function.md)  
 
 ![avatar](./04_function/JavaScript-function-base.gif)
 
