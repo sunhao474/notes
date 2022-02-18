@@ -63,3 +63,16 @@ function parseParams(url) {
 }
 
 parseParams()
+
+
+setTimeout(() => console.log("d"), 10);
+var r = new Promise(function (resolve, reject) {
+    setTimeout(() => {
+        resolve()
+    }, 0)
+});
+r.then(() => {
+    var begin = Date.now();
+    while (Date.now() - begin < 1000); console.log("c1");
+    new Promise(function (resolve, reject) { resolve() }).then(() => console.log("c2"))
+});
