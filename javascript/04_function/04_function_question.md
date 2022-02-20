@@ -1,7 +1,9 @@
 # 目录
 
 1.[实现call](#1)  
-2.[实现bind](#2)
+2.[实现bind](#2)  
+3.[防抖](#3)  
+4.[节流](#4)
 
 ---
 
@@ -33,6 +35,11 @@ Function.prototype.mycall = function() {
 
 
 ## <a id="2">实现bind</a>
+步骤
+* 通过arguments分拆出this和绑定函数时传的参数。
+* 声明一个func，并且也分拆他的arguments
+* 判断是否是this调用，详情看下方代码，通过判断一个空对象的原型是否是当前调用this即可。
+
 
 ``` javascript
 Function.prototype.mybind = function() {

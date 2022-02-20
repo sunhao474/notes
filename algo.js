@@ -159,3 +159,5 @@ function countNum(x, n) {
 
 
 console.log(countNum(1, 213));
+
+console.log(JSON.stringify(Object.prototype))
