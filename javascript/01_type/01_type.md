@@ -1,6 +1,7 @@
 # 目录
 1. [undfined和null的区别](#1)
 2. [浅拷贝，深拷贝](#2)
+3. [精度丢失](#3)  
 ---
 
 ## <a id="1">type和null的区别</a>
@@ -57,3 +58,9 @@ function deepClone(obj, hash = new WeakMap()) {
 }
 ```
 
+## <a id="3">浅拷贝，深拷贝</a>
+```js
+0.1 + 0.2 === 0.3
+```
+上述语句的执行结果是false。
+在`javascript`中，0.1和0.2都会转化为二进制后在进行运算（扩展阅读：[js数字精度研究](extends.md)）

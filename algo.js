@@ -161,3 +161,37 @@ function countNum(x, n) {
 console.log(countNum(1, 213));
 
 console.log(JSON.stringify(Object.prototype))
+
+function simplifyNumberStr(arrStr) {
+    let arr = arrStr.split(',');
+    let res = [];
+    let i = 0;
+    let cache = [];
+
+    while (i < arr.length) {
+        const current = arr[i];
+        if (i > 0 && current == Number(arr[i - 1]) + 1) {
+            cache.push(current)
+        }else if (i == 0) {
+            cache.push(current)
+        } else {
+            res.push([...cache]);
+            cache = [];
+            cache.push(current)
+        }
+
+        i++;
+    }
+
+    res.push(cache)
+
+    return res.map(item => {
+        if (item.length >= 2) {
+            return `${item[0]}-${item[item.length - 1]}`
+        } else {
+            return item[0];
+        }
+    }).join(',')
+}
+
+console.log(simplifyNumberStr('1,2,3,5,7,8,11,12,15,17,19'))
