@@ -6,6 +6,7 @@
 4.[函数声明和函数表达式的区别](#4)  
 5.[基本类型中的string真的实在栈中吗](#5)  
 6.[函数缓存](#6)  
+7.[内存泄露](#7)
 
 
 ---
@@ -128,3 +129,89 @@ const memorize = function(fn, content) {
 
 ---
 
+## <a id="7">内存泄露</a>
+由于各种原因，未能释放不再使用的内存。
+### 垃圾回收机制
+js具有自动垃圾回收机制。  
+通常使用的方法有：
+* 标记清除
+    - 当变量进入环境时候，会被标记为“使用中”，当离开环境时，会被标记为“使用完毕”
+    - 垃圾回收程序运行的时候，会标记内存中存储的所有变量。然后，它会将所有在上下文中的变量，以及被在上下文中的变量引用的变量的标记去掉
+    - 在此之后再被加上标记的变量就是待删除的了，原因是任何在上下文中的变量都访问不到它们了
+    - 随后垃圾回收程序做一次内存清理，销毁带标记的所有值并收回它们的内存
+* 引用计数
+    - 语言引擎有一张表存储引用变量及它的引用次数。如果他的引用次数是0，就表示不会再用到了，可以将这块内存释放。
+    - 如果一个值不再需要了，引用数却不为`0`，垃圾回收机制无法释放这块内存，从而导致内存泄漏  
+
+标记清除的例子：
+```js
+var m = 0,n = 19 // 把 m,n,add() 标记为进入环境。
+add(m, n) // 把 a, b, c标记为进入环境。
+console.log(n) // a,b,c标记为离开环境，等待垃圾回收。
+function add(a, b) {
+  a++
+  var c = a + b
+  return c
+}
+```
+
+引用计数的例子：
+```javascript
+const arr = [1, 2, 3, 4];
+console.log('hello world');
+```
+
+面代码中，数组`[1, 2, 3, 4]`是一个值，会占用内存。变量`arr`是仅有的对这个值的引用，因此引用次数为`1`。尽管后面的代码没有用到`arr`，它还是会持续占用内存
+
+如果需要这块内存被垃圾回收机制释放，只需要设置如下：
+
+```js
+arr = null
+```
+
+### 存在内存泄漏的情况
+* 意外的全局变量  
+```js
+function fn() {
+    bar = 'a'
+}
+
+function fn() {
+    this.bar = 'a'
+}
+
+fn()
+```
+* 定时器造成内存泄露
+```js
+var someResource = getData();
+setInterval(function(){
+    var node = document.getElementById('node')
+    if (node) {
+        node.innerHTML = JSON.stringify(someResource)
+    }
+}, 1000)
+```
+如果`id`为Node的元素从`DOM`中移除，该定时器仍会存在，同时，因为回调函数中包含对`someResource`的引用，定时器外面的`someResource`也不会被释放
+* 闭包
+```js
+function bindEvent() {
+    var obj = document.createElement('XXX')
+    var unused = function() {
+        console.log(obj, '闭包内引用obj obj不会被摧毁')
+    }
+
+    obj = null // 解决
+}
+```
+
+* 没有及时清理dom的元素
+```js
+const refA = document.getElementById('refA');
+document.body.removeChild(refA); // dom删除了
+console.log(refA, 'refA'); // 但是还存在引用能console出整个div 没有被回收
+refA = null;
+console.log(refA, 'refA'); // 解除引用
+```
+
+* 监听addEventListener,忘记remove

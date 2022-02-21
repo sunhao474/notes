@@ -20,8 +20,3 @@ while (true) {
     if (!f.next().value) break
     console.log(f.next())
 }
-
-// var arr = ['烧烤', '火锅', '日料', '西餐', '川菜', '粤菜', '海鲜']
-// let index = Math.floor(Math.random() * (arr.length))
-
-// console.log(index)
