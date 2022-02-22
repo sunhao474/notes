@@ -2,6 +2,7 @@
 1. [undfined和null的区别](#1)
 2. [浅拷贝，深拷贝](#2)
 3. [精度丢失](#3)  
+
 ---
 
 ## <a id="1">type和null的区别</a>
@@ -91,3 +92,5 @@ function deepClone(obj, hash = new WeakMap()) {
 > Math.pow(2, 1024)
 Infinity
 ```
+
+---

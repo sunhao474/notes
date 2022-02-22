@@ -1,10 +1,8 @@
 # 目录
 
-1.[实现call](#1)  
-2.[实现bind](#2)  
-3.[防抖](#3)  
-4.[节流](#4)
-
+1. [实现call](#1)  
+2. [实现bind](#2)  
+3. [实现new](#3)
 ---
 
 ## <a id="1">实现call</a>
@@ -62,3 +60,15 @@ Function.prototype.mybind = function() {
     return func
 }
 ```
+
+## <a id="3">实现new</a>
+
+```js
+function myNew(constructor, ...args) {
+    let obj = {};
+    obj.prototype = constructor.prototype;
+    let result = constructor.apply(obj, args);
+    return result instanceof Object ? result : obj;
+}
+```
+
