@@ -1,10 +1,17 @@
-function a() {
-    var a =1;
-    function b() {
-        console.log(a)
-    }
+let prms1 = new Promise(res => {
+    res('prms1')
+})
 
-    b();
-}
+let prms2 = prms1.then(result => {
+    let prms2 = new Promise(res => {
+        res('prms2' + ' + ' + result)
+    })
 
-a();
+    return prms2
+})
+
+console.log(prms2)
+
+prms2.then(res => {
+    console.log(res)
+})
