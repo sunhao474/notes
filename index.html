@@ -10,10 +10,43 @@
     <!-- <script type="text/javascript" src="base.js"></script> -->
     <!-- <script type="text/javascript" src="testEnv2.js"></script> -->
     <!-- <script type="text/javascript" src="function.js"></script> -->
+    <style>
+        .father {
+            display: inline-block;
+            background: blue;
+        }
+
+        .mother {
+            float: left;
+            width: 200px;
+            height: 200px;
+            background: gray;
+        }
+
+        .son1 {
+            width: 200px;
+            height: 200px;
+            background-color: yellow;
+            margin-bottom: 30px;
+        }
+
+        .son2 {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            /* float: right; */ /*  */
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        &ZeroWidthSpace;12312
+    <div class="father">
+        <div class="son1">
+            
+        </div>
+        <div class="son2"></div>
+
     </div>
+    <div class="mother"></div>
 </body>
 </html>
