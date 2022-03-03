@@ -76,4 +76,13 @@ entries.forEach(item => {
         item.target;             // 被观察者
 })
 }
+
+options = {
+  // 表示重叠面积占被观察者的比例，从 0 - 1 取值，
+  // 1 表示完全被包含
+  threshold: 1.0, 
+  root:document.querySelector('#scrollArea') // 必须是目标元素的父级元素
+}
+
+
 ```
