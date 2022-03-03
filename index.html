@@ -10,10 +10,83 @@
     <!-- <script type="text/javascript" src="base.js"></script> -->
     <!-- <script type="text/javascript" src="testEnv2.js"></script> -->
     <!-- <script type="text/javascript" src="function.js"></script> -->
+    <style type="text/css">
+        .outer {
+            position: relative;
+            height: 300px;
+            width: 300px;
+            background-color: red;
+            overflow: scroll;
+        }
+
+        .inner1 {
+            height: 50px;
+            width: 50px;
+            background-color: blue;
+        }
+        .inner2{
+            height: 50px;
+            width: 50px;
+            background-color: yellow;
+            margin-top: 2px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        &ZeroWidthSpace;12312
+    <div class="outer" id="father">
+        <div class="inner2" id="yes"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+        <div class="inner2"></div>
+
+        <div class="inner2"></div>
+        <div class="inner2"></div>
     </div>
+    <script  type="text/javascript">
+        let father = document.getElementById('father')
+        let inners = document.getElementsByClassName('inner2')
+        function handleScroll(e) {
+            console.log(e)
+
+            for (let i = 0; i < inners.length; i++) {
+                if (isInViewport(inners[i])) {
+                    inners[i].style.backgroundColor = 'blue'
+                } else {
+                    inners[i].style.backgroundColor = 'yellow'
+                }
+            }
+        }
+
+        function isInViewport(element) {
+            let father_scroll_top = father.scrollTop;
+            let viewHeight = father.offsetHeight;
+
+            let bound = element.getBoundingClientRect();
+            console.log(bound)
+            return (bound.top > 0) && (bound.bottom - viewHeight < 0)
+        }
+
+        function throttle(fn,time) {
+            let timer = null;
+            let _this = this;
+
+            return function(...args) {
+                if (!timer) {
+                    timer = setTimeout(() => {
+                        fn.call(_this, args)
+                        clearTimeout(timer)
+                        timer = null
+                    }, time)
+                }
+            }
+        }
+
+        let throttleScroll = throttle(handleScroll, 1000)
+        father.onscroll = handleScroll
+    </script>
 </body>
 </html>

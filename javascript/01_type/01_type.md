@@ -2,7 +2,8 @@
 1. [undfined和null的区别](#1)
 2. [浅拷贝，深拷贝](#2)
 3. [精度丢失](#3)  
-
+4. [类型转换机制](#4)
+5. [typeof和instanceOf](#5)
 ---
 
 ## <a id="1">type和null的区别</a>
@@ -94,3 +95,75 @@ Infinity
 ```
 
 ---
+
+## <a id="4">类型转换机制</a>
+* 显式转换
+  - Number() (本质是调用来源的valueOf和toString进行判断)
+    - 来源是字符串，则如果可以被解析为数值，解析为数值；否则NAN，空字符串为0；
+    - 来源是布尔值，true为1，false为0；
+    - 来源是undefined，转为NAN;
+    - 来源是null，转为0；
+    - 来源是对象，根据valueOf的结果进行进一步处理。
+  - parseInt()
+    - null, nan
+    - undefined, nan
+  - String()(本质跟Number类似，不过先调用toString)
+    - 数字，直接转为字符串
+    - bool，'true'和'false'
+    - undefined, 'undefined'
+    - null, 'null'
+    - 对象，根据toString和valueOf的结果进行处理
+  - Boolean()
+* 隐式转换
+  - 比较运算/算数运算的时候会发生
+  - 自动转化为布尔值：
+    - undefined 
+    - null 
+    - false 
+    - +0 
+    - -0
+    -  NaN
+    -  ""
+    - 上述都是false，其他是true
+  - 自动转化字符串
+      ```js
+      '5' + 1 // '51'
+      '5' + true // "5true"
+      '5' + false // "5false"
+      '5' + {} // "5[object Object]"
+      '5' + [] // "5"
+      '5' + function (){} // "5function (){}"
+      '5' + undefined // "5undefined"
+      '5' + null // "5null"
+      ```
+  - 自动转化为数值（除了null和undefined两个特殊情况，其他的都是除了加号会自动转数值）
+    ```js
+    '5' - '2' // 3
+    '5' * '2' // 10
+    true - 1  // 0
+    false - 1 // -1
+    '1' - 1   // 0
+    '5' * []    // 0
+    false / '5' // 0
+    'abc' - 1   // NaN
+    null + 1 // 1
+    undefined + 1 // NaN
+    ```
+
+---
+
+## <a id="5">typeof与instanceOf</a>
+`typeof`操作符返回一个字符串，表示未经计算的操作数的类型。  
+下面是typeof 可能的值：
+* undefined: 'undefined'
+* null: 'object'
+* Boolean: 'boolean'
+* Number: 'number'
+* BigInt: 'bigint'
+* String: 'string'
+* Symbol: 'symbol'
+* 宿主对象：取决于具体实现
+* Function对象: 'function'
+* 其他任何对象（包括数组）: 'object'
+
+`instanceof`用于检测构造函数的prototype属性是否出现在某个实例对象的原型上。  

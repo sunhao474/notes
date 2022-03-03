@@ -1,8 +1,9 @@
 # 目录
 
-1.[概念](#1)  
-2.[操作](#2)
-3.[事件](#3)
+1. [概念](#1)  
+2. [操作](#2)
+3. [事件](#3)
+4. [可视区域](#4)
 ---
 
 ## <a id="1">概念</a>
@@ -44,3 +45,35 @@
     - addEventListener(eventType, handler, useCapture), 第三个参数支持捕获
 * IE事件模型(基本不用)
 
+---
+
+## <a id="4">可视区域</a>
+需要判断可视区域的场景：
+* 图片懒加载
+* 列表无限滚动
+* 计算广告元素的曝光情况
+* 可点击链接的预加载
+
+有三种办法判断元素是否在可视区域：
+* offsetTop\scrollTop
+    -  offset 相关属性能得到当前元素相对于父级第一个具有定位属性（relative，absolute，fixed）的元素的距离
+    -  clientWidth 与 clientHeight 是元素内容区宽度（高度）+ padding
+    -  scrollWidth 与 scrollHeight 可以确定元素实际大小，不包括内外边距。也就是滚动视口的大小。
+    -  scrollLeft 与 scrollTop 属性是可读写的，用来确定当前元素的滚动位置
+* getBoudingClientRect
+    -  返回的是一个`DOMRect`对象。拥有`left`, `top`, `right`, `bottom`, `x`, `y`, `width`, 和 `height`属性
+* intersection Observer
+    - new IntersectionObserver(callback, options)
+```js
+function callback = (entries, observer) => {
+// entries是一个被观测的子元素数组
+entries.forEach(item => {
+        item.time;               // 触发的时间
+        item.rootBounds;         // 根元素的位置矩形，这种情况下为视窗位置
+        item.boundingClientRect; // 被观察者的位置举行
+        item.intersectionRect;   // 重叠区域的位置矩形
+        item.intersectionRatio;  // 重叠区域占被观察者面积的比例（被观察者不是矩形时也按照矩形计算）
+        item.target;             // 被观察者
+})
+}
+```

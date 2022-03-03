@@ -10,6 +10,8 @@
 8. [new做了什么](#8)
 9. [原型链](#9)
 10. [作用域链](#10)
+11. [尾递归](#11)
+12. [this](#12)
 ---
 
 ## <a id="1">闭包</a>
@@ -263,3 +265,40 @@ var person = new Person('person')
 词法作用域，又叫静态作用域，变量被创建的时候就确定好了，而非执行阶段确定的。  
 ### 作用域链
 当前作用域查找变量->上层作用域查找变量
+
+---
+
+## <a id="11">尾递归</a>
+在函数的尾部位置调用自身。
+* 在尾部调用的是函数自身。
+* 通过优化，使计算仅占用常量栈空间
+
+应用空间：
+
+数组求和
+
+```js
+function sumArray(arr, total) {
+    if(arr.length === 1) {
+        return total
+    }
+    return sum(arr, total + arr.pop())
+}
+```
+
+使用尾递归优化求斐波那契数列
+
+```js
+function factorial2 (n, start = 1, total = 1) {
+    if(n <= 2){
+        return total
+    }
+    return factorial2 (n -1, total, total + start)
+}
+```
+
+---
+
+## <a id="12">this</a>
+`this`关键字是函数运行时自动生成的一个内部对象，只能在函数内部使用，总是指向调用该函数的对象。`this`一旦被确定就不可以再被更改。
+new绑定优先级 > 显示绑定优先级 > 隐式绑定优先级 > 默认绑定优先级
