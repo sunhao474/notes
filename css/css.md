@@ -3,7 +3,49 @@
 1. [盒子模型](#1)
 2. [BFC](#2)
 3. [水平居中的方法](#3)
+4. [像素](#4)
+5. [em/px/rem/vh/vw](#5)
 
+---
+
+# css3新特性
+* 定位选择器：
+ ![](https://static.vue-js.com/e368cf20-9b5e-11eb-85f6-6fac77c0c9b3.png)
+* 新的边框
+    - border-radius: 创建圆角边框
+    - box-shadow： 为元素添加阴影
+    - border-image： 使用图片绘制边框
+
+* box-shadow
+* 背景的新属性：
+    - background-clip: 用于设定背景的覆盖区域
+    - background-origin： 用于设定背景图片的左上角对齐
+    - background-size： 调整背景图片的大小 
+* 文字
+    - word-wrap 设置文字换行： `normal | break-all`
+    - text-overflow 当前行超过容器边界，如何显示: `clip | ellipsis`
+    - text-shadow 为文本设定阴影.
+    - text-decoration 深层次的文字渲染，可以修改文字内部、边界的颜色，以及边界的宽度 `text-fill-color | text-stroke-color | text-stroke-width`
+* 颜色
+    - rgba
+    - hala
+* 过渡 transition
+    - `transition-property | transition-duration | transition-timing-function | transition-delay` 
+* 线性变换 transform 
+    - `translate` 位移
+    - `scale` 缩放
+    - `rotate()` 旋转
+    - `skew` 倾斜
+* 动画 animation 
+* 颜色渐变
+    - linear-gradient 线性渐变（笛卡尔坐标系渐变）
+    > background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
+    - radial-gradient 径向渐变(极坐标渐变)
+    > linear-gradient(0deg, red, green); 
+* flex 布局
+* grid 布局
+* 媒体查询
+* 混合模式
 ---
 
 ## <a id="1">盒子模型</a>
@@ -131,3 +173,94 @@
 
 ## <a id="3">水平居中的方法</a>
 有两种场景：分别为知道要居中元素的宽高，以及不知道宽高。这里我们只处理不知道宽高的情况，比较通用。
+* `transform:translate(-50%, -50%)`布局
+``` html
+<style>
+    .father {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+    }
+    .son {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        /* 用这个属性就不需要宽高了 */
+        transform: translate(-50%,-50%);
+
+        width: 100px;
+        height: 100px;
+        background: red;
+    }
+</style>
+<div class="father">
+    <div class="son"></div>
+</div>
+```
+
+* table布局  
+父元素添加属性`display: table-cell`，子元素设置`display：inline-block`。设置`vertical`和`text-align`可以让所有的行内块级元素水平垂直居中。
+``` html
+<style>
+    .father {
+        display: table-cell;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .son {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        background: red;
+    }
+</style>
+<div class="father">
+    <div class="son"></div>
+</div>
+```
+
+* flex弹性布局
+这个就简单了,设置父组件为`display: flex`，然后就是`justify-content: center;`和`align-items: center`结合使用了。
+
+---
+
+## <a id="4">像素</a>
+### px
+css pixel，px 是一个相对单位，参照标准是设备像素（device pixel）、一般情况，页面缩放为 1:1 ,则1个css像素就等于一个设备独立像素。  
+但是：
+* 在同一个设备上，每1个 CSS 像素所代表的设备像素是可以变化的（比如调整屏幕的分辨率）
+* 在不同的设备之间，每1个 CSS 像素所代表的设备像素是可以变化的（比如两个不同型号的手机）
+* 在页面进行缩放操作也会 引起`css`中`px`的变化
+
+px会受到下面的因素的影响而变化：
+
+* 每英寸像素（PPI）
+* 设备像素比（DPR）
+
+### 设备像素
+指设备能控制显示的最小物理单位
+ ![](https://static.vue-js.com/cffc6570-91f2-11eb-ab90-d9ae814b240d.png)
+这是一个绝对单位，单位为`pt`
+
+### 设备独立像素
+设备独立像素（Device Independent Pixel）：与设备无关的逻辑像素，代表可以通过程序控制使用的虚拟像素，是一个总体概念，包括了CSS像素。一个设备独立像素里可能包含1个或者多个物理像素点，包含的越多则屏幕看起来越清晰。  
+至于 1 个虚拟像素被换算成几个物理像素，这个数值我们称之为设备像素比，也就是下面介绍的`dpr`
+
+### dpr
+即设备像素比，代表设备独立像素到设备像素的转换关系，在`javascript`中可以通过`window.devicePixelRatio`获取。
+ ![](https://static.vue-js.com/dd45e2b0-91f2-11eb-ab90-d9ae814b240d.png)
+
+ ![](https://static.vue-js.com/e63cceb0-91f2-11eb-ab90-d9ae814b240d.png)
+ 当`dpr`为3，那么`1px`的`CSS`像素宽度对应`3px`的物理像素的宽度，1px的`CSS`像素高度对应`3px`的物理像素高度
+
+ ### ppi
+ ppi （pixel per inch），每英寸像素，表示每英寸所包含的像素点数目，更确切的说法应该是像素密度。数值越高，说明屏幕能以更高密度显示图像
+
+ ---
+
+ ## <a id="5">css单位</a>
+ 
