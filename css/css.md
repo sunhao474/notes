@@ -5,7 +5,9 @@
 3. [水平居中的方法](#3)
 4. [像素](#4)
 5. [em/px/rem/vh/vw](#5)
-
+6. [flex](#6)
+7. [grid](#7)
+8. [回流和重绘](#8)
 ---
 
 # css3新特性
@@ -263,4 +265,71 @@ px会受到下面的因素的影响而变化：
  ---
 
  ## <a id="5">css单位</a>
- 
+ css的长度单位可以分为相对长度单位和绝对长度单位
+ 相对长度单位：
+* px
+    - px 是绝对长度。只是在移动端中存在设备像素比。
+* em
+    - 相对于当前元素的`font-size`值大小。
+* rem
+    - 同上，但是是 root-em 相对于html的根元素`font-size`值大小。
+* vh、vw
+    - 窗口宽高比。如果100vh 就是100%当前窗口高。
+
+---
+
+## <a id="6">flex</a>
+即弹性布局，目前最为方便的布局。当容器css属性声明`display: flex`时，容器内部子元素按照弹性布局排列。
+![](https://static.vue-js.com/fbc5f590-9837-11eb-ab90-d9ae814b240d.png)
+容器中默认存在两条轴：`主轴`和`交叉轴`，呈90度关系。子元素默认按照主轴方向排列，主轴默认是横向排列的，可以通过`flex-direction`改变主轴方向。
+详情可以搜阮一峰的文章，讲解的比较详细。
+主元素属性有：
+- flex-direction
+- flex-wrap
+- flex-flow
+- justify-content
+- align-items
+- align-content
+
+容器成员的属性有：  
+- `order`：决定当前子元素该排列在第几个
+- `flex-grow`：决定当有剩余空间时，项目如何分配剩余空间
+- `flex-shrink`：决定当宽度不足时，项目如何挤压空间
+- `flex-basis`：决定项目的初始尺寸。
+- `flex`：上述三个属性的集合体。这里注意：当flex-wrap为no-wrap，这些属性才有意义
+- `align-self`：覆盖父元素的align-items，有自己自由的排列模式。
+
+---
+
+## <a id="7">grid</a>
+待补
+
+---
+
+## <a id="8">回流（重排）和重绘</a>
+* 回流：布局引擎会根据各种样式计算每个盒子在页面上的大小与位置
+    - 添加或删除可见的DOM元素
+    - 元素的位置发生变化
+    - 元素的尺寸发生变化（包括外边距、内边框、边框大小、高度和宽度等）
+    - 内容发生变化，比如文本变化或图片被另一个不同尺寸的图片所替代
+    - 页面一开始渲染的时候（这避免不了）
+    - 浏览器的窗口尺寸变化（因为回流是根据视口的大小来计算元素的位置和大小的）
+    - 特定属性的值：需要通过即时计算得到，所以为了获取值也会进行回流
+    > offsetTop、offsetLeft、 offsetWidth、offsetHeight、scrollTop、scrollLeft、scrollWidth、scrollHeight、clientTop、clientLeft、clientWidth、clientHeight，以及getComputedStyle方法
+* 重绘：当计算好盒模型的位置、大小及其他属性后，浏览器根据每个盒子特性进行绘制
+    - 颜色的修改
+    - 文本方向的修改
+    - 阴影的修改
+
+### 浏览器的优化机制
+因为重排会造成损耗，大多数浏览器会将一些触发重排的动作加入队列。但是当你使用类似 offsetTop 等方法，会清空队列。
+
+- 如果想设定元素的样式，通过改变元素的 `class` 类名 (尽可能在 DOM 树的最里层)
+- 避免设置多项内联样式
+- 应用元素的动画，使用 `position` 属性的 `fixed` 值或 `absolute` 值(如前文示例所提)
+- 避免使用 `table` 布局，`table` 中每个元素的大小以及内容的改动，都会导致整个 `table` 的重新计算
+- 对于那些复杂的动画，对其设置 `position: fixed/absolute`，尽可能地使元素脱离文档流，从而减少对其他元素的影响
+- 使用css3硬件加速，可以让`transform`、`opacity`、`filters`这些动画不会引起回流重绘
+- 避免使用 CSS 的 `JavaScript` 表达式
+- 在使用 `JavaScript` 动态插入多个节点时, 可以使用`DocumentFragment`. 创建后一次插入. 就能避免多次的渲染性能
+- display：none之后操作不会引起回流、重绘。（离线操作）
