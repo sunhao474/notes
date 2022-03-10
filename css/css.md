@@ -435,3 +435,73 @@ css3 新增的选择器：
 ---
 
 ## <a id="11">省略号</a>
+
+### 单行文本溢出
+
+- text-overflow：规定当文本溢出时，显示省略符号来代表被修剪的文本
+    - clip: 直接裁掉
+    - ellipsis: 显示省略号
+    - 只有在设置了`overflow:hidden`和`white-space:nowrap`才能够生效的
+- white-space：设置文字在一行显示，不能换行
+- overflow：文字长度超出限定宽度，则隐藏超出的内容
+
+### 多行文本溢出
+
+有两种策略，基于高度截断和基于行数截断。
+
+#### `高度截断`： 伪元素+定位
+
+- position: relative：为伪元素绝对定位
+- overflow: hidden：文本溢出限定的宽度就隐藏内容）
+- position: absolute：给省略号绝对定位
+- line-height: 20px：结合元素高度,高度固定的情况下,设定行高, 控制显示行数
+- height: 40px：设定当前元素高度
+- ::after {} ：设置省略号样式
+
+``` html
+<style>
+    .demo {
+        position: relative;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+    }
+    .demo::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0 20px 0 10px;
+    }
+</style>
+
+<body>
+    <div class='demo'>这是一段很长的文本</div>
+</body>
+```
+首先...只会出现在div的尾部，只能在文字的长度恰好的情况下进行合适的显示，然而如何合理保持文字长度是个问题。
+
+#### `高度截断`：
+- -webkit-line-clamp: 用来限制一个块元素显示的文本的行数，为了实现该效果，需要组合其他webkit属性；
+- display: -webkit-box: 结合上个属性，将对象作为弹性伸缩盒子模型显示
+- -webkit-box-orient: vertical: 和1结合使用，设置或检索伸缩盒对象的子元素的排列方式。
+- overflow: hidden: 文本溢出限定的宽度就隐藏内容
+- text-overflow: ellipsis：用省略号隐藏溢出
+
+```html
+<style>
+    p {
+        width: 400px;
+        border-radius: 1px solid red;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<p>
+    这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+    这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+</p >
+```
