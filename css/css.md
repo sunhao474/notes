@@ -11,6 +11,8 @@
 9. [css预处理语言](#9)
 10. [选择器](#10)
 11. [省略号])(#11)
+12. [三角形](#12)
+13. [动画](#13)
 
 ---
 
@@ -489,6 +491,7 @@ css3 新增的选择器：
 - text-overflow: ellipsis：用省略号隐藏溢出
 
 ```html
+
 <style>
     p {
         width: 400px;
@@ -504,4 +507,137 @@ css3 新增的选择器：
     这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
     这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
 </p >
+
 ```
+
+---
+
+## <a id="12">三角形</a>
+首先放一个具有width、height的div，给他一个有点长的border：
+<style>
+    .border {
+        width: 50px;
+        height: 50px;
+        border: 20px solid;
+        border-color: #96ceb4 #ffeead #d9534f #ffad60;
+    }
+</style>
+<div class="border"></div>
+观察相互border之间边界的补齐方式：是以div对角线为界分别填充的，如果把height和witdh设为0：
+<style>
+    .border2 {
+        width: 0px;
+        height: 0px;
+        border: 20px solid;
+        border-color: #96ceb4 #ffeead #d9534f #ffad60;
+    }
+</style>
+<div class="border2"></div>
+会发现有4个三角形。只要根据需要隐藏不需要的方向的三角形。根据css表现而言，隐藏相邻方向的两个三角形。
+<style>
+    .border3 {
+        width: 0px;
+        height: 0px;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid #d9534f;
+    }
+</style>
+<div class="border3"></div>
+有趣的是，如果只设置某一邻边为隐藏，就会得到一个一半的三角形
+<style>
+    .border4 {
+        width: 0px;
+        height: 0px;
+        /* border-left: 20px solid transparent; */
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid #d9534f;
+    }
+</style>
+<div class="border4"></div>
+如果要实现空心三角形也很简单，利用伪元素after再画一个相对小一点的三角形遮盖。
+<style>
+.border5 {
+    width: 0;
+    height: 0;
+    border-style:solid;
+    border-width: 0 50px 50px 50px;
+    border-color: transparent transparent #d9534f;
+    position: relative;
+}
+.border5:after {
+    content: '';
+    border-style: solid;
+    border-width: 0 40px 40px 40px;
+    border-color: transparent transparent #96ceb4;
+    position: absolute;
+    top: 6px;
+    left: -40px;
+}
+</style>
+<div class="border5"></div>
+
+---
+
+## <a id="13">动画</a>
+
+* transition 实现渐变动画（过渡）
+* transform 转变动画
+* animation 实现自定义动画
+
+### transition 过渡
+
+属性：
+* property：填写需要变化的css属性
+* duration：完成过渡效果需要的时间单位
+* timing-function：完成效果的速度曲线
+    - linear: 匀速
+    - ease: 慢-快-慢
+    - ease-in: 逐渐加快
+    - ease-out: 逐渐降速
+    - ease-in-out: 上述两者结合
+* delay: 动画效果的延迟触发时间
+<style>
+       .base {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            background-color: #0EA9FF;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #5daf34;
+            transition-property: width, height, background-color, border-width;
+            transition-duration: 2s;
+            transition-timing-function: ease-in-out;
+            transition-delay: 100ms;
+        }
+
+        /*简写*/
+        /*transition: all 2s ease-in 500ms;*/
+        .base:hover {
+            width: 200px;
+            height: 200px;
+            background-color: #5daf34;
+            border-width: 10px;
+            border-color: #3a8ee6;
+        }
+</style>
+<div class="base"></div>
+
+### transform
+配合transition使用。对象元素不能是inline元素，使用前需要改变display属性。  
+<style>
+    .base2 {
+        transform: none;
+        transition-property: transform;
+        transition-delay: 5ms;
+    }
+
+    .base2:hover {
+        transform: scale(0.8, 1.5) rotate(35deg) skew(5deg) translate(15px, 25px);
+    }
+</style>
+ <div class="base base2"></div>
+
+ ### animation
+ 
