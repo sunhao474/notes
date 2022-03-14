@@ -641,3 +641,39 @@ css3 新增的选择器：
 
  ### animation
  
+ `animation`是8个属性的简写：
+ * animation-duration: 指定动画完成一个周期所需要的时间
+ * animation-timing-function: 指定动画计时函数，即动画的速度曲线
+ * animation-delay: 指定动画的延迟时间，即动画何时开始
+ * animation-iteration-count: 指定动画的播放次数
+ * animation-derection: 指定动画的播放方向
+ * animation-fill-mode: 指定动画的填充模式，默认是 none
+ * animation-play-state: 指定动画的运行状态（运行 running 、暂停 pauser ）
+ * animation-name: 指定动画关键帧的名称
+
+ `animation`的核心就在于定义关键帧，然后浏览器会根据其他要素推算过程。
+
+<style>
+ @keyframes rotate1{
+    0%{
+        transform: rotate(0deg);
+    }
+    /* 50%{
+        transform: rotate(180deg);
+    } */
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+.wao {
+    width: 0px;
+    height: 0px;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid red;
+    animation: rotate1 2s;
+    animation-iteration-count: 20000;
+}
+</style>
+<div class="wao"></div>
