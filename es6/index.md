@@ -1,7 +1,7 @@
 # ES6
 
 1. [array](#1)
-
+2. [decorator](#2)
 ---
 
 ## <a id="1">array</a>
@@ -67,4 +67,59 @@ let obj2 = {
     - 判断数组里是否有对应的值，返回true、false
     - 第二个参数可选，
 * flat()、flatMap()
-    - flat()，用于将数组扁平化
+    - flat()，用于将数组扁平化,有一个参数可以指定flat深入到哪种层数。
+        ```js
+        [1, 2, [3, [4, 5]]].flat()
+        // [1, 2, 3, [4, 5]]
+
+        [1, 2, [3, [4, 5]]].flat(2)
+        // [1, 2, 3, 4, 5]
+        ```
+    - flatMap()难以解释，看看例子：
+        ```js
+        // 相当于 [[2, 4], [3, 6], [4, 8]].flat()
+        [2, 3, 4].flatMap((x) => [x, x * 2])
+        // [2, 4, 3, 6, 4, 8]
+        ```
+
+### 四 改变了sort算法，使之成为稳定排序算法。
+
+---
+
+## <a id="2">decorator</a>
+即装饰者模式：在不改变原类的情况下，动态扩展对象功能的设计理论。  
+详情看看代码：
+```js
+class A {
+    // ...
+}
+```
+定义一个装饰器，为A增加一个新功能：
+```js
+function extendA(target) {
+    target.newFn = 'hello'
+}
+```
+
+最后扩展A
+```js
+@extendA
+class A {
+
+}
+
+// 等同于
+A = extendA(A) || A
+```
+
+PS: 修饰器语法目前浏览器不支持，需要使用babel等工具转译。  
+
+`decorator` 可以用在下列两种情况：
+* 类的装饰
+* 类属性的装饰
+    - 当对类属性进行装饰的时候，能够接受三个参数：类的原型对象，需要装饰的属性名，装饰属性名的描述对象。举个例子：
+        ```js
+        function readonly(target, name, descriptor) {
+            descriptor.writable = false;
+        }
+        ```
