@@ -121,5 +121,15 @@ PS: 修饰器语法目前浏览器不支持，需要使用babel等工具转译�
         ```js
         function readonly(target, name, descriptor) {
             descriptor.writable = false;
+            return descriptor;
         }
+
+        class Person {
+            @readonly
+            name() { return this.name }
+        }
+
+        // 等价于
+
+        readonly(Person.prototype, 'name', descriptor);
         ```
