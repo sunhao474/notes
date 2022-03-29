@@ -2,6 +2,10 @@
 
 1. [array](#1)
 2. [decorator](#2)
+3. [function](#3)
+4. [generator](#4)
+5. [异步解决方案](#5)
+
 ---
 
 ## <a id="1">array</a>
@@ -133,3 +137,192 @@ PS: 修饰器语法目前浏览器不支持，需要使用babel等工具转译�
 
         readonly(Person.prototype, 'name', descriptor);
         ```
+
+---
+
+## <a id="3">function</a>
+
+### 默认值
+```js
+function fn(a , b = 1) {
+    // ...
+}
+```
+
+* 函数的形参是默认声明的，不能使用`let` `const`再次声明
+* 参数默认值应该是函数的尾参数，如果不是非尾部的参数设置默认值，实际上这个参数是不能省略的
+    ```js
+    function(a = 1, b) { // 错误
+
+    }
+    ```
+
+### 属性
+* `length` 将返回没有指定默认值的参数的个数, `rest` 参数也不会计入`length`属性。
+* `name` 返回该函数的函数名。
+    - 注意，如果将一个具名函数赋值一个变量，`name` 将返回这个具名函数原本的名字。
+        ```js
+        const bar = functino baz();
+        bar.name // baz
+        ```
+    - `Function` 构造函数返回的函数实例，`name`属性为 `anoymous`
+        ```js
+        (new Function).name  // 'anoymous'
+        ```
+    - `bind` 返回的函数，`name` 属性值会加上`bound` 前缀
+    ```js
+    function foo() {}
+    foo.bind({}).name // 'bound foo'
+    ```
+
+### 作用域
+一旦设置了参数的默认值，函数进行声明初始化时，参数会形成一个单独的作用域。  
+等到初始化结束，这个作用域就会消失。
+```js
+let x = 1;
+function f( y = x) {
+    let x = 2;
+    console.log(y)
+}
+
+f() // 1
+```
+
+### 严格模式
+
+只要函数参数使用了默认值、解构赋值、扩展运算符，那么函数内部就不能显示设定为严格模式。
+
+### 箭头函数
+
+* 函数体内的 `this` 对象，就是定义时所在的对象，而不是使用时所在的对象。箭头函数不会创建自己的this,它只会从自己的作用域链的上一层继承this
+* 不可以当作构造函数，也就是说，不可以使用 `new` 命令，否则会抛出错误。
+* 不可以使用 `arguments` 对象，该对象在函数体内不存在。
+* 不可以使用 `yield` 命令，因此箭头函数不能用作 generator 
+
+
+---
+
+## <a id="4">generator</a>
+generator 是 es6 提供的一种异步编程解决方案，语法行为与传统函数不同。  
+执行 generator 会返回一个遍历器对象，可以依次遍历内部的每一个状态：
+```js
+function* hello() {
+    yield 'hello';
+    yield 'world';
+    return 'ending';
+}
+```
+
+所谓`返回遍历器对象`，即结果具有`Symbol.iterator`属性
+```js
+function* gen() {
+
+}
+
+var g = gen();
+g[Symbol.iterator]() === g // true
+```
+
+* 通过 `yield` 关键字可以暂停 `generator` 函数返回的遍历器对象状态。比如上面的 `hello` 函数。  
+* 只要拿到遍历器对象，可以通过 `next` 方法将状态进行下去，直到遇到下一次 `yield` 停止。
+* 如果没有到新的 `yield` , 就一直运行到函数结束，直到 `return` 。并将 `return` 的变量作为返回值。
+* 如果没有 `return` ,则会在执行 `next` 返回一个 `value` 值为 `undefined` 的对象。
+```js
+let h = hello()
+
+h.next()
+// {value: 'hello', done: false}
+h.next()
+// {value: 'world', done: false}
+h.next()
+// {value: 'end', done: true}
+h.next()
+// {value: undefined, done: true}
+```
+
+`done` 判断是否有下个状态， `value`对应状态值。`yield`本身没有返回值，通过调用`next` 方法可以带一个参数，该参数就会被当作***上一个*** `yield`表达式的返回值。
+
+```js
+function *foo(x) {
+    var y = 2 * (yield(x + 1));
+    var z = yield (y / 3);
+    return (x + y + z)
+}
+
+var a = foo(5);
+a.next()
+// { value: 6, done: false }
+a.next()
+// { value: NAN, done: false }
+a.next()
+// { value: NAN, done: true }
+
+var b = foo(5)
+b.next()
+// { value: 6, done: false }
+b.next(12)
+// { value: 8, done: false }
+b.next(13)
+// { value: 42, done: false }
+```
+如上所说，`generator` 返回的是 `iterator` 对象，所以可以通过`for...of`遍历。  
+```js
+function* foo() {
+    yield 1;
+    yield 2;
+    yield 3;
+    yield 4;
+    yield 5;
+    return 6;
+}
+
+for (let v of foo()) {
+    console.log(v)
+}
+// 1 2 3 4 5 注意，遍历不到return
+```
+
+---
+
+## <a id="5">异步解决方案</a>
+下面通过一个顺序文件读取的案例来展示：
+
+* 回调函数
+    ```js
+    fs.readFile('a', function(err, data) {
+        if (err) throw err;
+        console.log(data)
+        fs.readFile('b', function(err, data) {
+            if (err) throw err;
+            console.log(data)
+        })
+    })
+    ```
+* Promise 对象
+    ```js
+    const readFile = function(fileName) {
+        return new Promise((res, rej) => {
+            fs.readFile(fileName, function(err, data) {
+                if (err) rej(err)
+
+                res(data)
+            })
+        })
+    }
+
+    readFile('a')
+        .then(res => {
+            console.log(res)
+            return readFile('b')
+        })
+        .then(res => {
+            console.log(res)
+        })
+    ```
+* generator 函数
+    ```js
+    
+    ```
+* async / await
+
+
