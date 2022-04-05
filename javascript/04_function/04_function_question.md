@@ -3,6 +3,8 @@
 1. [实现call](#1)  
 2. [实现bind](#2)  
 3. [实现new](#3)
+4. [箭头函数的指向](#4)
+
 ---
 
 ## <a id="1">实现call</a>
@@ -72,3 +74,30 @@ function myNew(constructor, ...args) {
 }
 ```
 
+---
+
+## <a id="4">箭头函数的指向</a>
+看下面两个例子：  
+```js
+// 1
+var o = {
+    a: 1,
+    b: () => {
+        console.log(this.a)
+    }
+}
+
+o.b()
+
+// 2
+function b() {
+    this.a = 'hello'
+    this.fn = () => {
+        this.a = 'world'
+        console.log(this.a)
+    }
+}
+
+let c = new b();
+c.fn()
+```

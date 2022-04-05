@@ -8,6 +8,12 @@
 6. [flex](#6)
 7. [grid](#7)
 8. [回流和重绘](#8)
+9. [css预处理语言](#9)
+10. [选择器](#10)
+11. [省略号])(#11)
+12. [三角形](#12)
+13. [动画](#13)
+
 ---
 
 # css3新特性
@@ -333,3 +339,341 @@ px会受到下面的因素的影响而变化：
 - 避免使用 CSS 的 `JavaScript` 表达式
 - 在使用 `JavaScript` 动态插入多个节点时, 可以使用`DocumentFragment`. 创建后一次插入. 就能避免多次的渲染性能
 - display：none之后操作不会引起回流、重绘。（离线操作）
+
+---
+## <a id="9">css预处理语言</a>
+扩充`css`语言，增加了变量、函数等功能，目的在于高效维护`css`。  
+包含一套自定义的语法和解析器，根据语法自定义样式规则，最终编译为`css`原文件
+
+* sass
+* less
+* stylus
+
+这些预处理语言主要具有以下特性：
+
+* 变量
+* 作用域
+* 代码混合
+    - 最为精髓的部分，类似函数化。举例less：
+        ``` less
+            .alert {
+                font-weight: 700;
+            }
+            
+            // @color是变量名，red是如果不提供变量的默认属性
+            .heighlight(@color: red) {
+                font-size: 1.2em;
+                color: @color;
+            }            
+        ```
+* 嵌套
+* 代码模块化
+
+---
+
+## <a id="10">选择器</a>
+用于选取dom元素。  
+
+有如下常用选择器：
+* id选择器(#)
+* 类选择器(.)
+* 标签选择器，以标签名直接进行选择
+* 后代选择器(a b),选择a选择器元素里所有b选择器，a和b都可以是任意选择器
+* 子选择器(a>b)，仅选择父元素为a选择器的b选择器。
+* 相邻同胞选择器(a+b)选择紧接在a之后的b
+
+还有一些伪类选择器：
+
+* `:link`: 选择未被访问的链接
+* `:visited`: 选择已经被访问的链接
+* `:active`: 选择活动链接
+* `:hover`: 选择指针覆盖的元素
+* `:focus`: 选择获取焦点的元素
+* `:first-child`: 选择第一个孩子，这类有很多，可以详细查询 mdn
+
+伪元素选择器：
+
+* `:first-letter`: 选取指定选择器的首字母
+* `:first-line`: 选取指定选择器的首行
+* `:before`: 在指定元素前插入内容
+* `:after`:在指定元素后插入内容
+
+dom属性选择器：
+
+* a[title]: 选择具有 title 属性的 a 选择器
+* a[title="hello"]: 选择具有 title 属性且为 `hello`
+* a[title~="hello"]: 属性可能是对象，该对象包含 `hello`
+* a[title|="hellow"]: 属性开头是 `hello`
+
+css3 新增的选择器：
+* 层次选择器(a~b): 选择所有b选择器前面有a选择器的对象
+* 伪类选择器：
+    - :first-of-type 表示一组同级元素中其类型的第一个元素
+    - :last-of-type 表示一组同级元素中其类型的最后一个元素
+    - :only-of-type 表示没有同类型兄弟元素的元素
+    - :only-child 表示没有任何兄弟的元素
+    - :nth-child(n) 根据元素在一组同级中的位置匹配元素
+    - :nth-last-of-type(n) 匹配给定类型的元素，基于它们在一组兄弟元素中的位置，从末尾开始计数
+    - :last-child 表示一组兄弟元素中的最后一个元素
+    - :root 设置HTML文档
+    - :empty 指定空的元素
+    - :enabled 选择可用元素
+    - :disabled 选择被禁用元素
+    - :checked 选择选中的元素
+    - :not(selector) 选择与 <selector> 不匹配的所有元素
+* 属性选择器：
+    - a[title*="hello"]: title 属性包含 value 的所有元素
+    - a[title^="hello"]: 开头为 hello
+    - a[title$="hello"]: 结尾为 hello
+
+### 属性优先级：
+> 内联 > ID选择器 > 类选择器 > 标签选择器
+其实是计算一个值，每个优先级有不同的权重，对应上面就是:
+> 1000 > 100 > 10 > 1
+
+### 属性继承
+在`css`中，子元素会根据父元素的属性，继承一些属性的表现。
+
+---
+
+## <a id="11">省略号</a>
+
+### 单行文本溢出
+
+- text-overflow：规定当文本溢出时，显示省略符号来代表被修剪的文本
+    - clip: 直接裁掉
+    - ellipsis: 显示省略号
+    - 只有在设置了`overflow:hidden`和`white-space:nowrap`才能够生效的
+- white-space：设置文字在一行显示，不能换行
+- overflow：文字长度超出限定宽度，则隐藏超出的内容
+
+### 多行文本溢出
+
+有两种策略，基于高度截断和基于行数截断。
+
+#### `高度截断`： 伪元素+定位
+
+- position: relative：为伪元素绝对定位
+- overflow: hidden：文本溢出限定的宽度就隐藏内容）
+- position: absolute：给省略号绝对定位
+- line-height: 20px：结合元素高度,高度固定的情况下,设定行高, 控制显示行数
+- height: 40px：设定当前元素高度
+- ::after {} ：设置省略号样式
+
+``` html
+<style>
+    .demo {
+        position: relative;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+    }
+    .demo::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0 20px 0 10px;
+    }
+</style>
+
+<body>
+    <div class='demo'>这是一段很长的文本</div>
+</body>
+```
+首先...只会出现在div的尾部，只能在文字的长度恰好的情况下进行合适的显示，然而如何合理保持文字长度是个问题。
+
+#### `高度截断`：
+- -webkit-line-clamp: 用来限制一个块元素显示的文本的行数，为了实现该效果，需要组合其他webkit属性；
+- display: -webkit-box: 结合上个属性，将对象作为弹性伸缩盒子模型显示
+- -webkit-box-orient: vertical: 和1结合使用，设置或检索伸缩盒对象的子元素的排列方式。
+- overflow: hidden: 文本溢出限定的宽度就隐藏内容
+- text-overflow: ellipsis：用省略号隐藏溢出
+
+```html
+
+<style>
+    p {
+        width: 400px;
+        border-radius: 1px solid red;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<p>
+    这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+    这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+</p >
+
+```
+
+---
+
+## <a id="12">三角形</a>
+首先放一个具有width、height的div，给他一个有点长的border：
+<style>
+    .border {
+        width: 50px;
+        height: 50px;
+        border: 20px solid;
+        border-color: #96ceb4 #ffeead #d9534f #ffad60;
+    }
+</style>
+<div class="border"></div>
+观察相互border之间边界的补齐方式：是以div对角线为界分别填充的，如果把height和witdh设为0：
+<style>
+    .border2 {
+        width: 0px;
+        height: 0px;
+        border: 20px solid;
+        border-color: #96ceb4 #ffeead #d9534f #ffad60;
+    }
+</style>
+<div class="border2"></div>
+会发现有4个三角形。只要根据需要隐藏不需要的方向的三角形。根据css表现而言，隐藏相邻方向的两个三角形。
+<style>
+    .border3 {
+        width: 0px;
+        height: 0px;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid #d9534f;
+    }
+</style>
+<div class="border3"></div>
+有趣的是，如果只设置某一邻边为隐藏，就会得到一个一半的三角形
+<style>
+    .border4 {
+        width: 0px;
+        height: 0px;
+        /* border-left: 20px solid transparent; */
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid #d9534f;
+    }
+</style>
+<div class="border4"></div>
+如果要实现空心三角形也很简单，利用伪元素after再画一个相对小一点的三角形遮盖。
+<style>
+.border5 {
+    width: 0;
+    height: 0;
+    border-style:solid;
+    border-width: 0 50px 50px 50px;
+    border-color: transparent transparent #d9534f;
+    position: relative;
+}
+.border5:after {
+    content: '';
+    border-style: solid;
+    border-width: 0 40px 40px 40px;
+    border-color: transparent transparent #96ceb4;
+    position: absolute;
+    top: 6px;
+    left: -40px;
+}
+</style>
+<div class="border5"></div>
+
+---
+
+## <a id="13">动画</a>
+
+* transition 实现渐变动画（过渡）
+* transform 转变动画
+* animation 实现自定义动画
+
+### transition 过渡
+
+属性：
+* property：填写需要变化的css属性
+* duration：完成过渡效果需要的时间单位
+* timing-function：完成效果的速度曲线
+    - linear: 匀速
+    - ease: 慢-快-慢
+    - ease-in: 逐渐加快
+    - ease-out: 逐渐降速
+    - ease-in-out: 上述两者结合
+* delay: 动画效果的延迟触发时间
+<style>
+       .base {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            background-color: #0EA9FF;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #5daf34;
+            transition-property: width, height, background-color, border-width;
+            transition-duration: 2s;
+            transition-timing-function: ease-in-out;
+            transition-delay: 100ms;
+        }
+
+        /*简写*/
+        /*transition: all 2s ease-in 500ms;*/
+        .base:hover {
+            width: 200px;
+            height: 200px;
+            background-color: #5daf34;
+            border-width: 10px;
+            border-color: #3a8ee6;
+        }
+</style>
+<div class="base"></div>
+
+### transform
+配合transition使用。对象元素不能是inline元素，使用前需要改变display属性。  
+<style>
+    .base2 {
+        transform: none;
+        transition-property: transform;
+        transition-delay: 5ms;
+    }
+
+    .base2:hover {
+        transform: scale(0.8, 1.5) rotate(35deg) skew(5deg) translate(15px, 25px);
+    }
+</style>
+ <div class="base base2"></div>
+
+ ### animation
+ 
+ `animation`是8个属性的简写：
+ * animation-duration: 指定动画完成一个周期所需要的时间
+ * animation-timing-function: 指定动画计时函数，即动画的速度曲线
+ * animation-delay: 指定动画的延迟时间，即动画何时开始
+ * animation-iteration-count: 指定动画的播放次数
+ * animation-derection: 指定动画的播放方向
+ * animation-fill-mode: 指定动画的填充模式，默认是 none
+ * animation-play-state: 指定动画的运行状态（运行 running 、暂停 pauser ）
+ * animation-name: 指定动画关键帧的名称
+
+ `animation`的核心就在于定义关键帧，然后浏览器会根据其他要素推算过程。
+
+<style>
+ @keyframes rotate1{
+    0%{
+        transform: rotate(0deg);
+    }
+    /* 50%{
+        transform: rotate(180deg);
+    } */
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+.wao {
+    width: 0px;
+    height: 0px;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid red;
+    animation: rotate1 2s;
+    animation-iteration-count: 20000;
+}
+</style>
+<div class="wao"></div>
