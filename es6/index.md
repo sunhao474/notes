@@ -5,6 +5,7 @@
 3. [function](#3)
 4. [generator](#4)
 5. [异步解决方案](#5)
+6. [module](#6)
 
 ---
 
@@ -330,7 +331,10 @@ for (let v of foo()) {
     async function gen() {
         let res1 = await readFile('a')
         let res2 = await readFile('b')
-        
+
     }
     ```
- 
+
+---
+
+## <a id="6">Module</a>
