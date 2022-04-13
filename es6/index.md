@@ -304,7 +304,6 @@ for (let v of foo()) {
         return new Promise((res, rej) => {
             fs.readFile(fileName, function(err, data) {
                 if (err) rej(err)
-
                 res(data)
             })
         })
@@ -321,8 +320,17 @@ for (let v of foo()) {
     ```
 * generator 函数
     ```js
-    
+    function* gen() {
+        yield readFile('a')
+        yield readFile('b')
+    }
     ```
 * async / await
-
-
+    ```js
+    async function gen() {
+        let res1 = await readFile('a')
+        let res2 = await readFile('b')
+        
+    }
+    ```
+ 
