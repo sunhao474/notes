@@ -5,8 +5,6 @@
 3. [function](#3)
 4. [generator](#4)
 5. [异步解决方案](#5)
-6. [module](#6)
-
 ---
 
 ## <a id="1">array</a>
@@ -336,5 +334,3 @@ for (let v of foo()) {
     ```
 
 ---
-
-## <a id="6">Module</a>
